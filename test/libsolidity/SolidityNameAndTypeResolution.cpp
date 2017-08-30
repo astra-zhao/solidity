@@ -4533,7 +4533,7 @@ BOOST_AUTO_TEST_CASE(no_warn_about_callcode_as_local)
 	char const* text = R"(
 		contract test {
 			function callcode() {
-				var x = this.callcode;
+				test.callcode();
 			}
 		}
 	)";
@@ -6140,14 +6140,14 @@ BOOST_AUTO_TEST_CASE(does_not_error_transfer_regular_function)
 {
 	char const* text = R"(
 		contract A {
-			function transfer(uint) {}
+			function transfer() {}
 		}
 
 		contract B {
 			A a;
 
 			function() {
-				a.transfer(100);
+				a.transfer();
 			}
 		}
 	)";
@@ -6224,7 +6224,7 @@ BOOST_AUTO_TEST_CASE(too_large_arrays_for_calldata)
 			}
 		}
 	)";
-	CHECK_SUCCESS_NO_WARNINGS(text);
+	CHECK_ERROR(text, TypeError, "Array is too large to be encoded as calldata.");
 	text = R"(
 		contract C {
 			function f(uint[85678901234] a) {
